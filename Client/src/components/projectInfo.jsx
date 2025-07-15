@@ -1,6 +1,7 @@
 import React from 'react'
-import '../App.css'
-import '../index.css'
+//import '../App.css'
+//import '../index.css'
+import '../layouts/profileinfo.css'
 const projectInfo = () => {
 
   return (

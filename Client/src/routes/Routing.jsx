@@ -5,7 +5,7 @@ import Projectframe from '../components/projectFrame';
 import Securitycode from '../components/Securitycode';
 import Verifyemail from '../components/verifyemail';
 import Enteremail from '../components/enteremail';
-import Profileinfo from '../components/profileinfo';
+import Profileinfo from '../components/profileinfo'; //tail
 import Bios from '../components/Bios';
 import Def from '../components/def';
 import Changepassword from '../components/changepassword';
