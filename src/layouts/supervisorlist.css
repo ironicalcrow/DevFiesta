@@ -1,0 +1,132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f8ff;
+    color: #333;
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.back-btn {
+    background-color: #6c92ff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+h1 {
+    font-size: 32px;
+    color: #4A90E2;
+    font-weight: 600;
+}
+
+.add-supervisor {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.input-field {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.add-team-btn,
+.add-btn {
+    background-color: #6c92ff;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    width: 320px;
+}
+
+.add-team-btn {
+    background-color: #4A90E2;
+}
+
+.supervisor-card {
+    background-color: #e7f0fe;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.supervisor-card h3 {
+    font-size: 24px;
+    color: #4A90E2;
+    margin-bottom: 10px;
+}
+
+.supervisor-card p {
+    font-size: 18px;
+    margin-top: 15px;
+}
+
+.supervisor-card ul {
+    margin-top: 12px;
+}
+
+.supervisor-card li {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.view-details-btn {
+    background-color: #4A90E2;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-top: 20px;
+}
+
+.delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-top: 15px;
+}
+
+.delete-btn:hover {
+    background-color: #ff1a1a;
+}
