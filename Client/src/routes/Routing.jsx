@@ -1,19 +1,19 @@
 // src/routes/Routing.jsx
 import { Routes, Route } from 'react-router-dom';
-import Frame29 from '../components/Frame29';
+import Frame29 from '../components/Frame29'; //css
 import Projectframe from '../components/projectFrame';
 import Securitycode from '../components/Securitycode';
 import Verifyemail from '../components/verifyemail';
 import Enteremail from '../components/enteremail';
 import Profileinfo from '../components/profileinfo'; //tail
-import Bios from '../components/Bios';
+import Bios from '../components/Bios'; // routes to showproject //css
 import Def from '../components/def';
-import Changepassword from '../components/changepassword';
-import Addproject from '../components/Addproject';
-import Hostingpage from '../components/hostingpage'
-import Loginpage from '../components/loginpage';
-import Supervisorlist from '../components/supervisorlist'
-import Teaminfo from '../components/teaminfo'
+import Changepassword from '../components/changepassword'; //css
+import Addproject from '../components/Addproject'; //css
+import Hostingpage from '../components/hostingpage' //css
+import Loginpage from '../components/loginpage'; //css
+import Supervisorlist from '../components/supervisorlist' //css
+import Teaminfo from '../components/teaminfo' //css
 import SignupForm from '../components/SignupForm'
 import Landingpage from '../components/Landingpage'
 import Signup from '../components/SIgnup';

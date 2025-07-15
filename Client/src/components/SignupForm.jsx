@@ -106,15 +106,17 @@ export default function SignupForm() {
 
         /* Main content area */
         .main-content {
-            flex-grow: 1;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0rem 1rem;
-            box-sizing: border-box;
-            margin-top:4rem;
-        }
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2.5rem 1rem 1rem 1rem;
+    /* Ensures there's always space for the navbar */
+    margin-top: 130px; /* Use your actual navbar height (adjust if your navbar height changes) */
+    box-sizing: border-box;
+}
+
 
         /* The sign-up form card */
         .signup-card {

@@ -2,89 +2,189 @@
 body, html, #root {
     margin: 0;
     padding: 0;
-    height: 100%;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #e8f0ff;
+    min-height: 100vh;
+    font-family: 'Inter', "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(180deg, #eaf2ff 0%, #e8f0ff 100%);
 }
 
 /* Container */
 .main-wrapperr {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    min-height: 100vh;
+    width: 100vw;
 }
 
 /* Header */
 .headerr {
-    background-color: white;
+    background: #fff;
     border-bottom: 2px solid #a4bcff;
-    padding: 16px 32px;
+    padding: 18px 3vw 18px 2vw;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    h1{
-        font-size: 80px;
-        font-weight: 700;
-    }
+    min-height: 90px;
+    box-shadow: 0 4px 24px 0 rgba(64,123,255,0.04);
 }
-
+.headerr h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #466bdb;
+    margin: 0 0 0 1vw;
+    letter-spacing: 2px;
+}
 .logo-section {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
 }
-
 .logo {
-    height: 32px;
-    margin-right: 8px;
+    height: 45px;
+    width: auto;
+    margin-right: 0.8rem;
 }
-
 .logo-text {
     color: #597ef7;
-    font-weight: 700;
-    font-size: 20px;
+    font-weight: 800;
+    font-size: 1.7rem;
+    letter-spacing: 1px;
 }
 
 /* Content Area */
-.contents{
-    flex-grow: 1;
+.contents {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     text-align: center;
     padding-top: 40px;
+    padding-bottom: 60px;
+    min-height: 68vh;
 }
 
 .heading {
-    font-size: 30px;
-    font-weight: 500;
-    padding-bottom: 100px;
-    
-    color: #000000d9;
-    margin-bottom: 60px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    padding-bottom: 38px;
+    color: #1a237e;
+    margin-bottom: 24px;
+    letter-spacing: 1px;
 }
 
 /* Buttons */
 .button-groups {
     display: flex;
-    gap: 50px;
+    flex-wrap: wrap;
+    gap: 2.8rem;
+    justify-content: center;
 }
 
 .action-button {
-    background-color: #6d8dfc;
-    color: white;
-    width: 500px;
-    font-weight: 700;
-    font-size: 18px;
-    padding: 30px 50px;
+    background: linear-gradient(120deg, #6d8dfc 60%, #83b8fd 100%);
+    color: #fff;
+    min-width: 220px;
+    max-width: 440px;
+    width: 34vw;
+    font-weight: 800;
+    font-size: 1.22rem;
+    padding: 34px 0;
     border: none;
-    border-radius: 20px;
+    border-radius: 2.1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    min-width: 200px;
-    height: 600px;
+    transition: background 0.18s, transform 0.14s, box-shadow 0.16s;
+    box-shadow: 0 8px 36px 0 rgba(109,141,252,0.14);
+    margin-bottom: 20px;
+    height: 330px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: normal;
+    line-height: 1.4;
+}
+.action-button:hover {
+    background: linear-gradient(120deg, #5478f2 60%, #769bf2 100%);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 16px 44px 0 rgba(84,120,242,0.19);
 }
 
-.action-button:hover {
-    background-color: #5478f2;
+/* Responsive styles */
+@media (max-width: 900px) {
+    .headerr {
+        padding: 14px 1vw 14px 2vw;
+        min-height: 70px;
+    }
+    .headerr h1 {
+        font-size: 2.1rem;
+    }
+    .logo {
+        height: 32px;
+    }
+    .logo-text {
+        font-size: 1.12rem;
+    }
+    .button-groups {
+        gap: 1.2rem;
+    }
+    .action-button {
+        min-width: 150px;
+        width: 80vw;
+        height: 180px;
+        font-size: 1rem;
+        padding: 18px 0;
+    }
+    .contents {
+        padding-top: 25px;
+        padding-bottom: 24px;
+    }
+    .heading {
+        font-size: 1.35rem;
+        padding-bottom: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-wrapperr {
+        min-width: 100vw;
+        padding: 0;
+    }
+    .headerr {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 2vw;
+        min-height: 52px;
+    }
+    .headerr h1 {
+        font-size: 1.12rem;
+        margin: 8px 0 0 0;
+    }
+    .logo-section {
+        gap: 0.2rem;
+    }
+    .logo {
+        height: 22px;
+        margin-right: 0.3rem;
+    }
+    .logo-text {
+        font-size: 0.91rem;
+    }
+    .action-button {
+        font-size: 0.94rem;
+        border-radius: 1rem;
+        padding: 9px 0;
+        min-width: 95vw;
+        max-width: 100vw;
+        height: 84px;
+    }
+    .button-groups {
+        gap: 0.6rem;
+    }
+    .contents {
+        padding-top: 15px;
+        padding-bottom: 9px;
+    }
+    .heading {
+        font-size: 0.98rem;
+        padding-bottom: 8px;
+    }
 }
