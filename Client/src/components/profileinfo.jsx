@@ -36,7 +36,9 @@ body, #root {
 /* Page Wrapper */
 .varia-page-wrapper {
   width: 100%;
+  allignment: center; /* <-- invalid */
 }
+
 
 /* Header */
 .varia-main-header {
@@ -402,14 +404,9 @@ body, #root {
 `}</style>
 
       <div className="varia-page-wrapper">
-        <header className='varia-main-header'>
-        </header>
 
-        <div className='varia-settings-title-bar'>
-          <div className="varia-settings-title-content">
 
-          </div>
-        </div>
+        
         
         <main className='varia-main-content'>
           <aside className='varia-sidebar-nav'>

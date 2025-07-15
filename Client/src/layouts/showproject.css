@@ -263,3 +263,75 @@ body, html, #root {
         margin: 0 auto;
     }
 }
+
+
+body, html, #root, .classy-bg {
+    font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+.show-header,
+.show-title,
+.show-title-block,
+.show-project-name,
+.gradient-text,
+.show-section-label,
+.stylish-badge,
+.repo-view-btn,
+.show-feature-item,
+.repo-link-url {
+    font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.01em;
+}
+
+.show-project-name,
+.gradient-text {
+    font-weight: 900 !important;
+    letter-spacing: -1.1px;
+}
+
+.show-section-label {
+    font-size: 1.13rem;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em;
+    font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+.show-section-content, .repo-card, .show-features-list, .show-feature-item, .show-link-arrow {
+    font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    font-weight: 500 !important;
+}
+
+.no-value {
+    font-style: italic;
+    color: #b2b7d4;
+    font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    font-weight: 400 !important;
+}
+
+.stylish-badge {
+    font-size: 1.07rem;
+    font-weight: 700 !important;
+}
+
+.repo-link-url {
+    font-size: 1.15rem;
+    font-weight: 700 !important;
+}
+
+.repo-view-btn {
+    font-size: 1.01rem;
+    font-weight: 700 !important;
+}
+
+.show-feature-item {
+    font-size: 1.09rem;
+    font-weight: 500 !important;
+}
+
+/* Adjust input and button fonts if you use any forms */
+input, button, select, textarea {
+    font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+    font-size: 1rem;
+}
+

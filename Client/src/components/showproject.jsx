@@ -45,7 +45,10 @@ export default function ShowProject() {
         let hostname = safeUrl;
         try {
             hostname = new URL(safeUrl).hostname;
-        } catch {}
+        } catch (error) {
+            console.error(error);
+        }
+
         return (
             <div className="repo-card">
                 <div className="repo-info">
@@ -69,10 +72,7 @@ export default function ShowProject() {
 
     return (
         <div className="show-main-bg classy-bg">
-            <header className="show-header">
-                <img src="https://i.imgur.com/J8ixBpn.png" className="show-logo" alt="DevFiesta Logo" />
-                <div className="show-title">DevFiesta</div>
-            </header>
+
 
             <div className="show-content-card animate-entrance">
                 <div className="show-flex-top">

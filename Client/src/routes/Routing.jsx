@@ -14,10 +14,10 @@ import Hostingpage from '../components/hostingpage' //css
 import Loginpage from '../components/loginpage'; //css
 import Supervisorlist from '../components/supervisorlist' //css
 import Teaminfo from '../components/teaminfo' //css
-import SignupForm from '../components/SignupForm'
-import Landingpage from '../components/Landingpage'
-import Signup from '../components/SIgnup';
-import ShowProject from '../components/showproject';
+import SignupForm from '../components/SignupForm' //tail
+import Landingpage from '../components/Landingpage' // does not exist
+import Signup from '../components/SIgnup'; //tail
+import ShowProject from '../components/showproject'; //css
 
 function Routing() {
   return (
