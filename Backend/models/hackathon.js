@@ -12,7 +12,8 @@ class hackathon{
             hackathon_image,
             starting_date,
             ending_date,
-            judge_username,
+            judge_username=[],
+            criterias=[]
         }=hackathon_data;
         console.log(hackathon.data)
         const [hackathon_result]= await pool.execute(`insert into hackathon(hackathon_name,host_username,duration,genre,rule_book,hackathon_image,starting_date,ending_date,added_date) values(?,?,?,?,?,?,?,?,NOW())`,[hackathon_name,username,duration,genre,rule_book,hackathon_image,starting_date,ending_date]);
@@ -20,19 +21,29 @@ class hackathon{
         const hackathon_id= hackathon_result.insertId;
 
         const judgeUsernames = judge_username.split(",").map(j => j.trim());
+        console.log(judgeUsernames)
+        
+        for (const judge of judgeUsernames) {
+                const judge_username = (judge || "").trim();
+                 console.log('this is the user ',judge_username)
+                if (!judge_username) continue;  
 
-        for(const judge_users of judgeUsernames)
-        {
-            const user = User.findByUsername(judge_users);
-            if(user)
-            {
-                await pool.execute(`insert into judges(judge_username,hackathon_id) values(?,?)`,[judge_users,hackathon_id]);
-            }
-            else
-            {
-                console.warn(`User not found, Username: ${judge_user}!!! Skipping judge_entry`);
+                const user = await User.findByUsername(judge_username);
+               
+            if (user) {
+                    await pool.execute(`INSERT INTO judges (judge_username, hackathon_id) VALUES (?, ?)`,[judge_username, hackathon_id]);
+                } 
+            else {
+            console.warn(`User not found: ${judge_username} — skipping judge_entry`);
             }
         }
+        for (const c of criterias) {
+                const criteriaInfo = (c.criteriainfo || "").trim();
+                if (!criteriaInfo) continue;
+
+                await pool.execute(`INSERT INTO criterias (hackathon_id, criteriainfo) VALUES (?, ?)`,[hackathon_id, criteriaInfo]);
+        }
+
         return hackathon_id;
     }
 
@@ -85,6 +96,42 @@ class hackathon{
     {
         const[hackathon]= await pool.execute(`select * from hackathon h join judges j on h.hackathon_id=j.hackathon_id where j.judge_username=?`,[judge_username]);
         return hackathon;
+    }
+
+    static async role_finding(username, hackathon_id)
+    {
+        const role= await pool.execute(`SELECT u.username, h.hackathon_id,
+                                        CASE
+                                            WHEN h.host_username = u.username THEN 'Host'
+                                            WHEN j.judge_username = u.username THEN 'Judge'
+                                            WHEN tp.username = u.username THEN 'Participant'
+                                            ELSE 'No Role'
+                                        END AS role
+                                        FROM users u
+                                            LEFT JOIN hackathon h ON h.hackathon_id = ?
+                                            LEFT JOIN judges j ON j.hackathon_id = h.hackathon_id AND j.judge_username = u.username
+                                            LEFT JOIN team_participants tp ON tp.hackathon_id = h.hackathon_id AND tp.username = u.username
+                                            WHERE u.username = ?`,[hackathon_id,username]);
+        return role;
+    }
+
+    static async get_user_role(req, res) {
+        try {
+            const { username } = req.user;
+            const { hackathon_id } = req.params;
+
+            const [role] = await Hackathon.role_finding(username, hackathon_id);
+
+            if (!role || role.length === 0) {
+                return ResponseHandler.notFound(res, `No role found for ${username} in hackathon ${hackathon_id}`);
+            }
+
+            return ResponseHandler.success(res, { role }, "Role retrieved successfully");
+        } 
+        catch (error) {
+            console.error("Error retrieving role:", error);
+            ResponseHandler.error(res, "Failed retrieving role", 500, error.message);
+        }
     }
 
 }    

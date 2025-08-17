@@ -23,4 +23,6 @@ router.get(`/my-judged`,verifyToken,HackathonController.get_judges_hackathons);
 
 router.get(`/my-all-judged-hackathons`,HackathonController.get_judges_all_hackathons);
 
+router.get(`/role/:hackathon_id`, verifyToken, HackathonController.get_user_role);
+
 module.exports = router;

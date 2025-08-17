@@ -34,7 +34,7 @@ const verifyToken = (req, res, next) => {
  
   const authHeader = req.headers.authorization
   console.log('mb')
-
+  console.log('Print token')
   console.log(authHeader)
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Token missing or invalid" })

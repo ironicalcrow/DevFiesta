@@ -4,6 +4,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const projectRoutes = require("./routes/project");
 const hackathonRoutes= require("./routes/hackathon");
+const participationRoutes = require('./routes/participation')
 const { testConnection } = require("./config/database");
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/project", projectRoutes);
 
 app.use("/api/hackathon",hackathonRoutes);
+app.use('/api/participation',participationRoutes)
 
 app.get("/", (req, res) => {
   res.send("API is working!");
