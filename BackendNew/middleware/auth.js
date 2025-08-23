@@ -43,7 +43,8 @@ const verifyToken = (req, res, next) => {
   try {
     const token = authHeader.split(" ")[1]
     const user = JWTUtils.verifyToken(token)
-    req.user = user // user = { username, email }
+    req.user = user
+    console.log(user)
     next()
   } catch (err) {
     return res.status(401).json({ error: err.message || "Invalid token" })

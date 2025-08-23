@@ -31,6 +31,7 @@ class User{
     return users[0] || null
   }
    static async findByUsername(username) {
+    console.log(username)
     const [users] = await pool.execute("SELECT * FROM users WHERE username = ?", [username])
     return users[0] || null
   }

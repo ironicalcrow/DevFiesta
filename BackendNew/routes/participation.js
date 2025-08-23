@@ -9,4 +9,5 @@ router.get("/members/:team_id", verifyToken, participantController.get_team_memb
 router.post("/mark", verifyToken, participantController.marking_teams);
 router.get("/leaderboard/:hackathon_id", verifyToken, participantController.leader_board);
 
+router.get("/hackathon/:hackathon_id/my-team", verifyToken, participantController.getUserTeamByHackathon);
 module.exports = router;

@@ -12,11 +12,11 @@ class hackathonController{
             console.log('it is done and dusted')
             const
             {
-                hackathon_name,host_username,duration,genre,rule_book,hackathon_image,starting_date,ending_date,judge_username, criterias
+                hackathon_name,host_username,duration,genre,rule_book,hackathon_image,starting_date,ending_date,judge_username, judging_criteria
             }= req.body;
             console.log(req.body)
 
-            const hackathon_data= {hackathon_name,duration,genre,rule_book,hackathon_image,starting_date,ending_date,judge_username,criterias};
+            const hackathon_data= {hackathon_name,duration,genre,rule_book,hackathon_image,starting_date,ending_date,judge_username,judging_criteria};
 
             const  hackathon_id= await Hackathon.host_hackathon(hackathon_data,host_username);
             
@@ -64,8 +64,9 @@ class hackathonController{
     {
         try
         {
-            const {hackathon_name}= req.params;
-            const hackathons= await Hackathon.get_hackathon_by_name(hackathon_name);
+            const { name } = req.params;
+            const hackathons = await Hackathon.get_hackathon_by_name(name);
+
             if(!hackathons || hackathons.length===0)
             {
                 return ResponseHandler.notFound(res,`No hackathon named ${hackathon_name} found`);
@@ -168,7 +169,8 @@ class hackathonController{
     static async get_judges_hackathons(req,res)
     {
     try{ 
-        const{username}= req.user;
+        const{username}= req.query;
+   
         const hackathons= await Hackathon.get_hackathons_by_judges(username);
         if(!hackathons||hackathons.length===0)
             {
@@ -186,7 +188,7 @@ class hackathonController{
     static async get_judges_all_hackathons(req,res)
     {
     try{ 
-        const{username}= req.user;
+        const{username}= req.query;
         const hackathons= await Hackathon.get_all_hackathons_by_judges(username);
         if(!hackathons||hackathons.length===0)
             {
@@ -219,7 +221,29 @@ class hackathonController{
         return ResponseHandler.error(res, "Failed retrieving role", 500, error.message);
     }
 }
-    
+static async getGivenMarks(req, res) {
+    try {
+        const { username } = req.user;
+        const { team_id } = req.params;
+
+        const marks = await Team.finding_given_marks(username, team_id);
+
+        if (!marks || marks.length === 0) {
+            return ResponseHandler.notFound(res, "No marks found for this judge on this team");
+        }
+
+        return ResponseHandler.success(
+            res,
+            { marks },
+            "Marks retrieved successfully"
+        );
+    } catch (error) {
+        console.error("Error retrieving given marks:", error);
+        return ResponseHandler.error(res, "Failed to retrieve marks", 500, error.message);
+    }
+}
+
+
 }
 
 module.exports= hackathonController;

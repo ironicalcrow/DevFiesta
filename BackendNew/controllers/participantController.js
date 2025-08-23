@@ -30,6 +30,26 @@ class participantController {
         }
     }
 
+     static async getUserTeamByHackathon(req, res) {
+    try {
+      const { hackathon_id } = req.params;
+
+      const username = req.user.username; // or from token: req.user.username
+
+      if (!username) {
+        return res.status(400).json({ message: "Username is required" });
+      }
+
+      const team = await Team.findByHackathonAndUser
+      (hackathon_id, username);
+      console.log("controller ",team)
+      return res.status(200).json(team);
+    } catch (err) {
+      console.error("❌ Error fetching user team:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
     static async get_team_members(req, res) {
         try {
             const { team_id } = req.params;
@@ -47,7 +67,8 @@ class participantController {
     static async marking_teams(req, res) {
         try {
             const { team_id, hackathon_id, judge_username, criteria_ids, marks, comments } = req.body;
-
+            console.log(req.body)
+            
             await Team.team_marking(team_id, hackathon_id, judge_username, criteria_ids, marks, comments);
 
             return ResponseHandler.success(res, { team_id, hackathon_id }, "Team marked successfully");
@@ -68,6 +89,46 @@ class participantController {
         } catch (error) {
             console.error("Retrieving leaderboard error:", error);
             return ResponseHandler.error(res, "Failed to retrieve leaderboard", 500, error.message);
+        }
+    }
+
+    static async team_by_username(req,res)
+    {
+        try
+        {
+            const {username} = req.user;
+            const {hackathon_id} = req.params;
+            const team = await Team.team_finding_by_username(username, hackathon_id);
+
+            if (!team || team.length === 0)
+                return ResponseHandler.notFound(res, "No team found for this user in this hackathon");
+
+                return ResponseHandler.success(res, { team }, "Team retrieved successfully");
+        }
+        catch (error) {
+            console.error("Retrieving team by username error:", error);
+            return ResponseHandler.error(res, "Failed to retrieve team", 500, error.message);
+        }
+    }
+    
+    static async getProjectDataByTeamId(req, res) {
+        try {
+            const { team_id } = req.params;
+
+            const project = await Project.get_project_data_by_team_id(team_id);
+
+            if (!project || project.length === 0) {
+                return ResponseHandler.notFound(res, "No project found for this team");
+            }
+
+            return ResponseHandler.success(
+                res,
+                { project },
+                "Project data retrieved successfully"
+            );
+        } catch (error) {
+            console.error("Error retrieving project by team ID:", error);
+            return ResponseHandler.error(res, "Failed to retrieve project", 500, error.message);
         }
     }
 }
