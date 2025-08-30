@@ -123,21 +123,6 @@ const Navbar = () => {
                 {/* Join Hackathon Dropdown */}
                 <div ref={joinRef} className='relative text-black flex flex-row items-center justify-center xl:h-full xl:w-1/4'> <a href='#' onClick={(e) => { e.preventDefault(); setShowJoinDropdown(prev => !prev); }} className='flex flex-row items-center lg:whitespace-nowrap justify-center sm:text-sm md:text-sm lg:text-lg xl:text-xl 2xl:text-xl'> Join a Hackathon <FaAngleDown className='hidden lg:block xl:h-full xl:pt-0.5 xl:pl-0.5 xl:ml-1/2' /> </a> {showJoinDropdown && ( <div className="absolute top-full mt-3 w-56 bg-white shadow-lg border rounded-xl flex flex-col z-50 p-2 space-y-1 transition-all duration-150 ease-in-out"> <a onClick={(e) => { e.preventDefault(); setShowJoinDropdown(false); navigateto('/hackathons'); }} href="#" className="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-blue-200 hover:text-black transition-all duration-150 text-base"> 🧭 Explore Hackathons </a> <a onClick={(e) => { e.preventDefault(); setShowJoinDropdown(false); navigateto('/projects') }} href="#" className="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-blue-200 hover:text-black transition-all duration-150 text-base"> 🔑 Explore Projects </a> </div> )} </div>
 
-                {/* --- START: NEW PBL DROPDOWN --- */}
-                <div ref={pblRef} className='relative text-black flex flex-row items-center justify-center xl:h-full xl:w-1/4'> 
-                    <a href='#' onClick={(e) => { e.preventDefault(); setShowPblDropdown(prev => !prev); }} className='flex flex-row items-center lg:whitespace-nowrap justify-center sm:text-sm md:text-sm lg:text-lg xl:text-xl 2xl:text-xl'> 
-                        Explore PBLs <FaAngleDown className='hidden lg:block xl:h-full xl:pt-0.5 xl:pl-0.5 xl:ml-1/2' /> 
-                    </a> 
-                    {showPblDropdown && ( 
-                        <div className="absolute top-full mt-3 w-56 bg-white shadow-lg border rounded-xl flex flex-col z-50 p-2 space-y-1 transition-all duration-150 ease-in-out"> 
-                            <a onClick={(e) => { e.preventDefault(); setShowPblDropdown(false); navigateto('/pbls'); }} href="#" className="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-blue-200 hover:text-black transition-all duration-150 text-base"> 📚 Explore PBLs </a> 
-                            <a onClick={(e) => { e.preventDefault(); setShowPblDropdown(false); checkIfLoggedin(); navigateto('/my-pbls'); }} href="#" className="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-blue-200 hover:text-black transition-all duration-150 text-base"> 📂 My PBLs </a> 
-                        </div> 
-                    )} 
-                </div>
-                {/* --- END: NEW PBL DROPDOWN --- */}
-
-                {/* Host Hackathon Dropdown */}
                 <div ref={hostRef} className='relative'> <a href="#" onClick={(e) => { e.preventDefault(); setShowHostDropdown(prev => !prev); }} className='flex flex-row items-center justify-center sm:text-sm md:text-sm lg:text-lg xl:text-xl 2xl:text-xl'> Host a Hackathon <FaAngleDown className="hidden lg:block ml-1" /> </a> {showHostDropdown && ( <div className="absolute top-full mt-3 w-56 bg-white shadow-lg border rounded-xl flex flex-col z-50 p-2 space-y-1 transition-all duration-150 ease-in-out"> <a onClick={(e) => { e.preventDefault(); setShowHostDropdown(false); navigateto('/hackathons'); }} href="#" className="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-blue-200 hover:text-black transition-all duration-150 text-base"> 🌍 Explore Hackathons </a> <a onClick={(e) => { e.preventDefault(); setShowHostDropdown(false); checkIfLoggedin(); }} className="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-blue-200 hover:text-black transition-all duration-150 text-base"> 🚀 Host a Hackathon </a> <a onClick={(e) => { e.preventDefault(); setShowHostDropdown(false); checkIfLoggedin(); navigateto('/profileinfo') }} href="#" className="flex items-center gap-2 px-4 py-3 rounded-lg hover:bg-blue-200 hover:text-black transition-all duration-150 text-base"> 🗂️ Your Participations </a> </div> )} </div>
             </div>
 

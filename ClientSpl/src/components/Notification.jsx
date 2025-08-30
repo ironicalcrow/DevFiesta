@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 // You would typically install these icons from a library like lucide-react
 // For this self-contained example, we'll create a simple SVG component.
@@ -11,21 +12,20 @@ const MessageSquareText = ({ className }) => (
   </svg>
 );
 
-// The main Notification Item Component
-const NotificationItem = ({ id, title, description, time, read, onToggleRead ,notification}) => {
+const NotificationItem = ({ id, title, description, time, read, onToggleRead, notification }) => {
   const baseClasses = "flex items-start p-4 w-full rounded-lg transition-colors duration-200 ease-in-out";
-  const readClasses = read ? "bg-white hover:bg-gray-50" : "bg-blue-50 hover:bg-blue-100";
-
+  const readClasses = read ? "bg-white hover:bg-gray-50" : "bg-white hover:bg-blue-100";
+  console.log(notification)
   return (
     <div className={`${baseClasses} ${readClasses}`}>
-      <div className="flex-shrink-0 mr-4">
+      <div className="flex-shrink-0 mr-4 ">
         <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm border border-gray-100">
           <MessageSquareText className="w-6 h-6 text-blue-500" />
         </div>
       </div>
       <div className="flex-grow">
-        <h3 className="font-semibold text-gray-800">{title}</h3>
-        <p className="text-sm text-gray-600 mt-1">{notification}</p>
+        <h3 className="font-bold font-4xl text-black">{title}</h3>
+        <p className="text-lg text-black mt-1">{notification}</p>
         <span className="text-xs text-gray-400 mt-2 block">{time}</span>
       </div>
       <div className="flex-shrink-0 ml-4">
@@ -43,16 +43,29 @@ const NotificationItem = ({ id, title, description, time, read, onToggleRead ,no
 // Main App Component (Notification Page)
 export default function App() {
   const [notifications, setNotifications] = useState([
-    'this is a demo notification'
+  
   ]);
+  useEffect(() => {
+    const getnotifications = async () => {
+      const token=localStorage.getItem('token')
+      const response = await axios.get('http://localhost:4000/api/auth/notifications', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      console.log(response.data.data.notifications)
+      setNotifications(response.data.data.notifications)
+    }
+    getnotifications()
+  },[])
 
   const handleToggleRead = (id) => {
     setNotifications(
       notifications.map((n) => (n.id === id ? { ...n, read: !n.read } : n))
     );
   };
-  
-  
+
+
 
 
   return (
@@ -60,22 +73,22 @@ export default function App() {
       <div className="container mx-auto p-4 sm:p-6 lg:p-8">
         <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
           <main>
-            <div className="divide-y divide-gray-200">
+            <div className="bg-[#E9F0FF] space-y-4">
               {notifications.map((notification) => (
                 <NotificationItem
-                  key={notification.id}
-                  notification={notification}
+                  key={notification.notification_id}
+                  notification={notification.notification_text}
                   onToggleRead={handleToggleRead}
                 />
               ))}
             </div>
-             {notifications.length === 0 && (
-                <div className="text-center p-12 text-gray-500">
-                    <MessageSquareText className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                    <h3 className="text-lg font-semibold">No Messages</h3>
-                    <p className="text-sm">You have no new messages.</p>
-                </div>
-             )}
+            {notifications.length === 0 && (
+              <div className="text-center p-12 text-gray-500">
+                <MessageSquareText className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <h3 className="text-lg font-semibold">No Messages</h3>
+                <p className="text-sm">You have no new messages.</p>
+              </div>
+            )}
           </main>
         </div>
       </div>

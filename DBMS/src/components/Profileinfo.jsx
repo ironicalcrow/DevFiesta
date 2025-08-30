@@ -5,6 +5,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FaGithub } from "react-icons/fa6";
 import { FaTag } from "react-icons/fa";
+import ProfileLogo from '../Images/img4.jpg'
+import Card from '../Images/Card.png'
 
 const GitHubIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 group-hover:text-black transition-colors duration-300">
@@ -48,7 +50,7 @@ const ProjectCard = ({ project }) => {
           
             <div className="h-48 overflow-hidden">
                 <img
-                    src={`https://placehold.co/600x400/E9F0FF/4060C1?text=${placeholderText}`}
+                    src={Card}
                     alt={`Visual representation of ${project.project_name}`}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
@@ -86,11 +88,20 @@ const ProjectCard = ({ project }) => {
         </div>
     );
 };
-// --- MODIFIED COMPONENT END ---
+
 
 
 const HackathonCard = ({ hackathon }) => {
-    console.log('check if the correct is going')
+    const [role,setrole]=useState('No Role')
+    const token =localStorage.getItem('token')
+    console.log(hackathon)
+    const getrole=async()=>{
+         const response = await axios.get(`http://localhost:4000/api/hackathon/role/${hackathon.hackathon_id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+        console.log(response.data.data.role[0].role)
+        setrole(response.data.data.role[0].role)
+    }
     console.log(hackathon)
     const goto = useNavigate();
     return (
@@ -104,7 +115,7 @@ const HackathonCard = ({ hackathon }) => {
                 <p className="text-gray-600 text-sm h-20 overflow-hidden">{hackathon.overview}</p>
             </div>
             <div className="bg-gray-50 px-6 py-3">
-                <a onClick={() => goto('/viewhackathon', { state: { hackathon ,User:'Host'} })} className="text-blue-500 hover:underline font-semibold text-sm cursor-pointer">View Hackathon</a>
+                <a onClick={() =>{getrole(); goto('/viewhackathon', { state: { hackathon ,User:role} })}} className="text-blue-500 hover:underline font-semibold text-sm cursor-pointer">View Hackathon</a>
             </div>
         </div>
     )
@@ -235,6 +246,9 @@ const PortfolioPage = () => {
                 setjudgedalltimelength(mockHackathons.length);
             }
         };
+        const getrole=async ()=>{
+
+        }
 
         const token = localStorage.getItem('token');
         const projectUser = JSON.parse(localStorage.getItem('user'));
@@ -242,6 +256,7 @@ const PortfolioPage = () => {
         const username = projectUser?.user?.username;
 
         if (username && token) {
+            getrole(username,token)
             fetchProjects(username, token);
             fetchHackathons(username, token);
             fetchjudgedhackathons(username,token)

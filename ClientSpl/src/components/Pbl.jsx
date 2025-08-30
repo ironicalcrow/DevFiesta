@@ -183,7 +183,7 @@ const LoginFormPopup = ({ isOpen, onClose, pbl }) => {
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500" required />
                     </div>
-                    <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#4060C1] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Login
                     </button>
                 </form>
@@ -286,6 +286,37 @@ const RegisterFormPopup = ({ isOpen, onClose, pbl, username }) => {
 };
 
 
+// const PblCard = ({ info, style, onLoginClick, onRegisterClick }) => {
+//     const status = getpblstatus(info.proposal_Date, info.final_presentation);
+//     const statusClasses = getStatusClasses(status.text);
+
+//     return (
+//         <div style={style} className="bg-white rounded-xl shadow-md overflow-hidden group hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 border border-gray-200 hover:border-blue-500 card-enter flex flex-col justify-between">
+//             <div>
+//                 <div className="relative">
+//                     <img src={info.pbl_image || `https://placehold.co/600x250/6D8EF2/FFFFFF?text=${encodeURIComponent(info.pbl_name)}`} alt={`${info.pbl_name} banner`} className="w-full h-40 object-cover" />
+//                     <span className={`absolute top-4 right-4 text-xs font-bold px-3 py-1.5 rounded-full ${statusClasses}`}>{status.text}</span>
+//                 </div>
+//                 <div className="p-6">
+//                     <h3 className="text-xl font-bold text-gray-900 truncate mb-3 group-hover:text-blue-600 transition-colors">{info.pbl_name}</h3>
+//                     <div className="flex items-center text-gray-600 text-sm space-x-5 mb-4">
+//                         <span className="flex items-center"><Globe size={14} className="mr-1.5" /> {info.genre || 'General'}</span>
+//                         <span className="flex items-center"><Users size={14} className="mr-1.5" /> Participants</span>
+//                     </div>
+//                     <p className="text-sm font-medium text-gray-500">{status.text === 'Upcoming' ? status.timeLeft : `Ends: ${new Date(info.final_presentation).toLocaleDateString()}`}</p>
+//                 </div>
+//             </div>
+//             <div className="p-6 pt-0 grid grid-cols-2 gap-3">
+//                 <button onClick={() => onRegisterClick(info)} className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-300">
+//                     Register
+//                 </button>
+//                 <button onClick={() => onLoginClick(info)} className="w-full bg-[#4060C1] text-white font-bold py-2 px-4 rounded-lg hover:bg-sky-600 transition-colors duration-300">
+//                     Login
+//                 </button>
+//             </div>
+//         </div>
+//     );
+// };
 const PblCard = ({ info, style, onLoginClick, onRegisterClick }) => {
     const status = getpblstatus(info.proposal_Date, info.final_presentation);
     const statusClasses = getStatusClasses(status.text);
@@ -307,10 +338,14 @@ const PblCard = ({ info, style, onLoginClick, onRegisterClick }) => {
                 </div>
             </div>
             <div className="p-6 pt-0 grid grid-cols-2 gap-3">
-                <button onClick={() => onRegisterClick(info)} className="w-full bg-green-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-300">
+                <button
+                    onClick={() => onRegisterClick(info)}
+                    className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    disabled={status.text === 'Ended'} // <-- This is the main change
+                >
                     Register
                 </button>
-                <button onClick={() => onLoginClick(info)} className="w-full bg-sky-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-sky-600 transition-colors duration-300">
+                <button onClick={() => onLoginClick(info)} className="w-full bg-[#4060C1] text-white font-bold py-2 px-4 rounded-lg hover:bg-sky-600 transition-colors duration-300">
                     Login
                 </button>
             </div>

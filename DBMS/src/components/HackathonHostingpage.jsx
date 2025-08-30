@@ -206,20 +206,20 @@ export default function App() {
         e.preventDefault();
         const judgeUsernames = formData.judges.map(j => j.username.trim()).filter(Boolean).join(', ');
         const submissionData = { ...formData, judge_username: judgeUsernames, hackathon_image };
-        // try {
-        //     const token = localStorage.getItem('token') || 'mock-token';
-        //     const response = await axios.post('http://localhost:4000/api/hackathon/host', submissionData, {
-        //         headers: { Authorization: `Bearer ${token}` },
-        //     });
-        //     const hackathon_id = response.data.data.hackathon_id;
-        //     const finalData = { ...submissionData, hackathon_id };
-        //     setStep(s => s + 1);
-        //     setTimeout(() => {
-        //         navigateto('/viewhackathon', { state: { finalData, User: 'Host' } });
-        //     }, 2000);
-        // } catch (error) {
-        //     console.error("API submission failed:", error);
-        // }
+        try {
+            const token = localStorage.getItem('token') || 'mock-token';
+            const response = await axios.post('http://localhost:4000/api/hackathon/host', submissionData, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const hackathon_id = response.data.data.hackathon_id;
+            const finalData = { ...submissionData, hackathon_id };
+            setStep(s => s + 1);
+            setTimeout(() => {
+                navigateto('/viewhackathon', { state: { finalData, User: 'Host' } });
+            }, 2000);
+        } catch (error) {
+            console.error("API submission failed:", error);
+        }
     };
 
     const steps = ['Core Details', 'Schedule & Rules', 'Judging Criteria', 'Add Judges', 'Review & Submit'];

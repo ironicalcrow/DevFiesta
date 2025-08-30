@@ -37,9 +37,22 @@ const getStatusClasses = (statusText) => {
 // --- Redesigned Hackathon Card Component ---
 
 const HackathonCard = ({ info }) => {
+    console.log('This is running')
+    const token=localStorage.getItem('token')
     const navigate = useNavigate();
     const status = getHackathonStatus(info.starting_date, info.ending_date);
     const statusClasses = getStatusClasses(status.text);
+    const [participants,setparticipants]=useState(0)
+    useEffect(()=>{
+        const getteamnumber=async()=>{
+              const response = await axios.get(`http://localhost:4000/api/participation/hackathon/${info.hackathon_id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });   
+            console.log(response.data.data.teams[0].length)
+            setparticipants(response.data.data.teams[0].length)
+        }
+        getteamnumber()
+    },[])
 
     const handleCardClick = async () => {
         console.log("Navigating to hackathon:", info.hackathon_name);
@@ -50,11 +63,11 @@ const HackathonCard = ({ info }) => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const User = response.data.data.role[0]?.role || 'No Role';
-            navigate('/viewhackathon', { state: { hackathon, User } });
+            navigate('/viewhackathon', { state: { hackathon, User,participants } });
         } catch (error) {
             console.error("Error fetching role, navigating as guest:", error.response ? error.response.data : error.message);
             // Navigate even if role check fails, as a guest/non-participant
-            navigate('/viewhackathon', { state: { hackathon, User: 'No Role' } });
+            navigate('/viewhackathon', { state: { hackathon, User: 'No Role' ,participants} });
         }
     };
 
@@ -82,6 +95,8 @@ const HackathonCard = ({ info }) => {
                 <div className="text-sm text-gray-600 mb-6">
                     <p><strong>Starts:</strong> {new Date(info.starting_date).toLocaleDateString()}</p>
                     {status.text === 'Upcoming' && <p className="text-blue-600 font-semibold">{status.timeLeft}</p>}
+                    <p><strong>Participants : </strong>{participants}</p>
+                    
                 </div>
                 <div className="mt-auto pt-4 border-t border-gray-100 flex justify-between items-center">
                      <div className="flex items-center">

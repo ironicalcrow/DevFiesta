@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { 
-    Calendar, Globe, Users, Tag, ChevronRight, Gavel, 
-    UsersRound, PlusCircle, LogIn, CheckCircle, Award 
+import {
+    Calendar, Globe, Users, Tag, ChevronRight, Gavel,
+    UsersRound, PlusCircle, LogIn, CheckCircle, Award
 } from 'lucide-react';
 import axios from 'axios';
 import { userContext } from '../hooks/AutoAuth';
@@ -29,18 +29,20 @@ const ViewHackathonPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const hackathon = location?.state;
-    const User = location?.state?.User || 'host';
+    const [User, setUser] = useState('No Role')
+
     const [hasproject, sethasproject] = useState(0);
     console.log(userC?.User)
 
     if (hackathon === null) return <div className="min-h-screen bg-[#E9F0FF] flex items-center justify-center">Nothing to show</div>;
     if (hackathon.hackathon != null) localStorage.setItem('tempP', JSON.stringify(hackathon.hackathon));
     console.log(User)
+    console.log(hackathon)
     const finalData = location?.state?.finalData || JSON.parse(localStorage.getItem('tempP'));
-    console.log(finalData)
+    console.log(finalData.hackathon_name)
     const status = getHackathonStatus(finalData.starting_date, finalData.ending_date);
-    
-   
+
+
     const isJoinable = status.text.includes('Running');
 
     const now = new Date();
@@ -49,6 +51,25 @@ const ViewHackathonPage = () => {
     const progressPercent = now < start ? 0 : now > end ? 100 : ((now - start) / (end - start)) * 100;
 
     useEffect(() => {
+        const getrole = async () => {
+            const token = localStorage.getItem('token')
+            try {
+
+                const response = await axios.get(`http://localhost:4000/api/hackathon/role/${finalData.hackathon_id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+                );
+                console.log(response.data.data.role[0].role)
+                setUser(response.data.data.role[0].role)
+
+
+
+            } catch (error) {
+                console.error("Failed to get the role:", error);
+                sethasproject(0);
+            }
+        }
+        getrole()
         const ifhasproject = async () => {
             try {
                 const response = await axios.get(`http://localhost:4000/api/project/${finalData.hackathon_id}/user/${userC.User.user.username}`);
@@ -62,6 +83,7 @@ const ViewHackathonPage = () => {
         if (User.toLowerCase() === 'participant' && userC?.User?.user?.username) {
             ifhasproject();
         }
+
     }, [User, finalData.hackathon_id, userC.User]);
 
     const addproject = async () => {
@@ -84,7 +106,7 @@ const ViewHackathonPage = () => {
         { name: "Participants", href: "/projectteams" },
         { name: "Rules", href: finalData?.rule_book, isExternal: true },
     ];
-    
+
     const InfoItem = ({ icon, label, value }) => (
         <div className="flex items-center justify-between text-gray-700">
             <span className="flex items-center"><span className="text-gray-500">{icon}</span><span className="ml-3">{label}</span></span>
@@ -112,11 +134,11 @@ const ViewHackathonPage = () => {
                                     {navItems.map((item) => {
                                         const isActive = item.name === 'Overview';
                                         return (
-                                            <a 
-                                                key={item.name} 
-                                                href={item.href} 
-                                                target={item.isExternal ? "_blank" : "_self"} 
-                                                rel="noopener noreferrer" 
+                                            <a
+                                                key={item.name}
+                                                href={item.href}
+                                                target={item.isExternal ? "_blank" : "_self"}
+                                                rel="noopener noreferrer"
                                                 className={`relative group cursor-pointer py-2 text-base sm:text-lg transition-colors duration-300 ${isActive ? 'font-semibold text-blue-600' : 'font-medium text-gray-600 hover:text-blue-600'}`}
                                             >
                                                 {item.name}
@@ -135,41 +157,43 @@ const ViewHackathonPage = () => {
                                 <div>
                                     <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Actions</h2>
                                     <div className="flex flex-wrap gap-4">
-                                        {userC?.User?(
-                                         User.toLowerCase() === 'host' ? (
-                                            <>
-                                                <button onClick={() => navigate('/markingpage', { state: { id: finalData.hackathon_id,hname:finalData.hackathon_name } })} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><Users /> View Leaderboard</button>
-                                                <Link to={'/judges'} state={{ ID: finalData?.hackathon_id }} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><Gavel /> View Judges</Link>
-                                                <button onClick={() => navigate('/projectteams', { state: { hid: finalData } })} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><UsersRound /> View Teams</button>
-                                            </>
-                                        ):
-                                        User.toLowerCase() === 'judge'?(
-                                            <>
-                                                 <button onClick={() => navigate('/markingpage', { state: { id: finalData.hackathon_id } })} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><Users /> View Leaderboard</button>
-                                                <button onClick={() => navigate('/projectteams', { state: { hid: finalData } })} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><UsersRound /> View Teams</button>
-                                            </>
-                                        ):
-                                        User.toLowerCase() === 'participant' ?(
-                                            <button onClick={addproject} disabled={hasproject > 0} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"><PlusCircle /> {hasproject > 0 ? "Project Submitted" : "Add Project"}</button>
-                                        ):
-                                        
-                                
-                                        User === 'No Role' && (
-                                            <button 
-                                                onClick={participantform} 
-                                                disabled={!isJoinable}
-                                                className="flex items-center gap-2 bg-[#4060C1] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
-                                            >
-                                                <LogIn /> 
-                                                { isJoinable
-                                                    ? 'Join Hackathon' 
-                                                    : (status.text.includes('Ended') ? 'Hackathon Ended' : 'Registration Not Open')}
-                                            </button>
-                                        )
-                                        ):( <button onClick={() => navigate('/login')} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl">Login</button>)}
+                                        {userC?.User ? (
+                                            User.toLowerCase() === 'host' ? (
+                                                <>
+                                                    <button onClick={() => {
+                                                         navigate('/markingpage', { state: { id: finalData?.hackathon_id, hname: finalData?.hackathon_name } }) }} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><Users /> View Leaderboard</button>
+                                                    <Link to={'/judges'} state={{ ID: finalData?.hackathon_id }} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><Gavel /> View Judges</Link>
+                                                    <button onClick={() => navigate('/projectteams', { state: { hid: finalData } })} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><UsersRound /> View Teams</button>
+                                                </>
+                                            ) :
+                                                User.toLowerCase() === 'judge' ? (
+                                                    <>
+                                                       <button onClick={() => {
+                                                         navigate('/markingpage', { state: { id: finalData?.hackathon_id, hname: finalData?.hackathon_name } }) }} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><Users /> View Leaderboard</button>
+                                                        <button onClick={() => navigate('/projectteams', { state: { hid: finalData } })} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl"><UsersRound /> View Teams</button>
+                                                    </>
+                                                ) :
+                                                    User.toLowerCase() === 'participant' ? (
+                                                        <button onClick={addproject} disabled={hasproject > 0} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"><PlusCircle /> {hasproject > 0 ? "Project Submitted" : "Add Project"}</button>
+                                                    ) :
+
+
+                                                        User === 'No Role' && (
+                                                            <button
+                                                                onClick={participantform}
+                                                                disabled={!isJoinable}
+                                                                className="flex items-center gap-2 bg-[#4060C1] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                                                            >
+                                                                <LogIn />
+                                                                {isJoinable
+                                                                    ? 'Join Hackathon'
+                                                                    : (status.text.includes('Ended') ? 'Hackathon Ended' : 'Registration Not Open')}
+                                                            </button>
+                                                        )
+                                        ) : (<button onClick={() => navigate('/login')} className="flex items-center gap-2 bg-[#6D8EF2] text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:-translate-y-1 hover:shadow-xl">Login</button>)}
                                     </div>
                                 </div>
-                                
+
                                 <div>
                                     <h2 id="overview" className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Overview</h2>
                                     <div className="prose prose-lg max-w-full text-gray-600 space-y-4">
@@ -192,12 +216,12 @@ const ViewHackathonPage = () => {
                                         <div className="flex items-center"><Calendar className="h-5 w-5 text-gray-500 flex-shrink-0" /><p className="ml-3 font-semibold">Ends: {new Date(finalData.ending_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p></div>
                                     </div>
                                 </div>
-                                
+
                                 <div className="bg-gray-50/70 p-6 rounded-xl border border-gray-200 space-y-4">
                                     <h3 className="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Details</h3>
                                     <InfoItem icon={<Globe size={20} />} label="Mode" value="Online" />
                                     <InfoItem icon={<Tag size={20} />} label="Genre" value={finalData?.genre || 'N/A'} />
-                                    <InfoItem icon={<Users size={20} />} label="Participants" value="0" />
+                                    <InfoItem icon={<Users size={20} />} label="Participants" value={hackathon?.participants ? hackathon?.participants : 0} />
                                 </div>
 
                                 <div className="bg-gray-50/70 p-6 rounded-xl border border-gray-200">

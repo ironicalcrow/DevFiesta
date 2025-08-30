@@ -6,7 +6,7 @@ import {
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-// --- Global Styles & Helper Components (No changes needed) ---
+// --- Global Styles & Helper Components (No changes) ---
 const GlobalStyles = () => (
     <style>{`
       body {
@@ -138,14 +138,27 @@ export default function App() {
         if (!formData.genre) newErrors.genre = 'Please select a genre.';
         return newErrors;
     };
-    const validateStep2 = () => { /* ... no changes ... */ 
+
+    // --- MODIFIED CODE ---
+    const validateStep2 = () => {
         const newErrors = {};
-        if (!formData.starting_date) newErrors.starting_date = 'Start date is required.';
-        if (!formData.ending_date) newErrors.ending_date = 'End date is required.';
-        else if (formData.starting_date && new Date(formData.ending_date) < new Date(formData.starting_date)) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to midnight for accurate date comparison
+
+        if (!formData.starting_date) {
+            newErrors.starting_date = 'Start date is required.';
+        } else if (new Date(formData.starting_date) < today) {
+            newErrors.starting_date = 'Start date cannot be in the past.';
+        }
+
+        if (!formData.ending_date) {
+            newErrors.ending_date = 'End date is required.';
+        } else if (formData.starting_date && new Date(formData.ending_date) < new Date(formData.starting_date)) {
             newErrors.ending_date = 'End date cannot be before the start date.';
         }
+        
         if (!formData.duration) newErrors.duration = 'Duration is required (e.g., 48 Hours).';
+        
         if (!formData.rule_book) {
             newErrors.rule_book = 'A link to the rule book is required.';
         } else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(formData.rule_book)) {
@@ -153,6 +166,8 @@ export default function App() {
         }
         return newErrors;
     };
+    // --- END OF MODIFIED CODE ---
+
     const validateStep3 = () => { /* ... no changes ... */ 
         const newErrors = { judging_criteria: [] };
         let hasError = false;
@@ -219,12 +234,12 @@ export default function App() {
             }, 2000);
         } catch (error) {
             console.error("API submission failed:", error);
+            alert(error.message)
         }
     };
 
     const steps = ['Core Details', 'Schedule & Rules', 'Judging Criteria', 'Add Judges', 'Review & Submit'];
 
-    // --- NEW: Vertical Step Indicator Component ---
     const StepIndicator = useMemo(() => (
         <div className="w-full h-full bg-gradient-to-br from-[#6D8EF2] to-[#4060C1] p-8 rounded-l-2xl">
             <h2 className="text-2xl font-bold text-white mb-2">Hackathon Setup</h2>
@@ -249,7 +264,6 @@ export default function App() {
         </div>
     ), [step]);
 
-    // --- NEW: Review Step Detail Component ---
     const ReviewDetail = ({ label, value }) => (
         <div className="flex flex-col">
             <span className="text-sm text-gray-500">{label}</span>
@@ -269,14 +283,11 @@ export default function App() {
                         <p className="mt-2 text-lg text-gray-600">Bring your vision to life, one step at a time.</p>
                     </header>
 
-                    {/* --- NEW: Two-Column Layout --- */}
                     <main className="grid grid-cols-1 lg:grid-cols-3 bg-white rounded-2xl shadow-2xl min-h-[650px]">
-                        {/* Left Sidebar */}
                         <div className="hidden lg:block">
                             {StepIndicator}
                         </div>
 
-                        {/* Right Form Panel */}
                         <div className="lg:col-span-2 p-8 sm:p-12 flex flex-col justify-between">
                             <form onSubmit={handleSubmit} noValidate className="flex-grow flex flex-col">
                                 <div className="flex-grow">
@@ -288,13 +299,13 @@ export default function App() {
                                                 <FormInput id="hackathon_name" name="hackathon_name" type="text" placeholder="My Awesome Hackathon" value={formData.hackathon_name} onChange={handleChange} icon={<PartyPopper size={20} />} error={errors.hackathon_name} />
                                                 <FormInput id="host_username" name="host_username" type="text" placeholder="your-username" value={formData.host_username} onChange={handleChange} icon={<User size={20} />} error={errors.host_username} />
                                                <FormSelect id="genre" name="genre" value={formData.genre} onChange={handleChange} icon={<Shapes size={20} />} error={errors.genre}>
-    <option value="" disabled>Select a genre...</option>
-    {hackathonGenres.map(genre => (
-        <option key={genre} value={genre}>
-            {genre}
-        </option>
-    ))}
-</FormSelect>
+                                                    <option value="" disabled>Select a genre...</option>
+                                                    {hackathonGenres.map(genre => (
+                                                        <option key={genre} value={genre}>
+                                                            {genre}
+                                                        </option>
+                                                    ))}
+                                                </FormSelect>
                                             </div>
                                         </section>
                                     )}

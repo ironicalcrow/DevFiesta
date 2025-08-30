@@ -10,13 +10,13 @@ import Card from '../Images/Card.png'
 
 const GitHubIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400 group-hover:text-black transition-colors duration-300">
-      <FaGithub  size={'22'}/>
+        <FaGithub size={'22'} />
     </svg>
 );
 
 const TagIcon = () => (
-     <svg  xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <FaTag  size={'22'}/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <FaTag size={'22'} />
     </svg>
 );
 
@@ -42,12 +42,12 @@ const ProjectCard = ({ project }) => {
         goto('/viewproject', { state: { project } });
     };
 
-    
+
     const placeholderText = encodeURIComponent(project.project_genre || 'Project');
 
     return (
         <div className="group flex flex-col h-full bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-          
+
             <div className="h-48 overflow-hidden">
                 <img
                     src={Card}
@@ -56,7 +56,7 @@ const ProjectCard = ({ project }) => {
                 />
             </div>
 
-       
+
             <div className="p-6 flex flex-col flex-grow">
                 <div>
                     <p className="text-blue-600 font-semibold text-sm mb-1">{project.project_genre}</p>
@@ -64,7 +64,7 @@ const ProjectCard = ({ project }) => {
                     <p className="text-gray-500 text-sm h-20 overflow-hidden text-ellipsis">{project.overview}</p>
                 </div>
 
-             
+
                 <div className="mt-auto pt-4 flex justify-between items-center">
                     <a
                         href={project.git_repo}
@@ -77,7 +77,7 @@ const ProjectCard = ({ project }) => {
                     </a>
                     <button
                         onClick={handleViewProject}
-                    
+
                         className="text-blue-600 font-semibold text-sm flex items-center gap-2"
                     >
                         View Project
@@ -92,13 +92,13 @@ const ProjectCard = ({ project }) => {
 
 
 const HackathonCard = ({ hackathon }) => {
-    const [role,setrole]=useState('No Role')
-    const token =localStorage.getItem('token')
+    const [role, setrole] = useState('No Role')
+    const token = localStorage.getItem('token')
     console.log(hackathon)
-    const getrole=async()=>{
-         const response = await axios.get(`http://localhost:4000/api/hackathon/role/${hackathon.hackathon_id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+    const getrole = async () => {
+        const response = await axios.get(`http://localhost:4000/api/hackathon/role/${hackathon.hackathon_id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
         console.log(response.data.data.role[0].role)
         setrole(response.data.data.role[0].role)
     }
@@ -115,10 +115,38 @@ const HackathonCard = ({ hackathon }) => {
                 <p className="text-gray-600 text-sm h-20 overflow-hidden">{hackathon.overview}</p>
             </div>
             <div className="bg-gray-50 px-6 py-3">
-                <a onClick={() =>{getrole(); goto('/viewhackathon', { state: { hackathon ,User:role} })}} className="text-blue-500 hover:underline font-semibold text-sm cursor-pointer">View Hackathon</a>
+                <a onClick={() => { getrole(); goto('/viewhackathon', { state: { hackathon, User: role } }) }} className="text-blue-500 hover:underline font-semibold text-sm cursor-pointer">View Hackathon</a>
             </div>
         </div>
     )
+};
+
+const PblCard = ({ pbl }) => {
+    const goto = useNavigate();
+
+    const handleViewPbl = () => {
+        // Assuming a route like '/pblsearch' exists for viewing PBL details.
+        // The specific login/register logic is handled on that page.
+        goto('/pblsearch');
+    };
+
+    return (
+        <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+            <div>
+                <img src={pbl.pbl_image || Card} alt={`${pbl.pbl_name} banner`} className="w-full h-48 object-cover" />
+            </div>
+            <div className="p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-2">{pbl.pbl_name}</h3>
+                <p className="text-sm font-medium text-green-600 mb-4">{pbl.genre}</p>
+                <p className="text-gray-600 text-sm h-20 overflow-hidden">{pbl.description}</p>
+            </div>
+            <div className="bg-gray-50 px-6 py-3">
+                <button onClick={handleViewPbl} className="text-blue-500 hover:underline font-semibold text-sm cursor-pointer w-full text-left">
+                    View PBL
+                </button>
+            </div>
+        </div>
+    );
 };
 
 
@@ -134,14 +162,15 @@ const PortfolioPage = () => {
     const [hackathons, setHackathons] = useState([]);
     const [hackathonlength, setHackathonlength] = useState(0);
 
+    const [pbls, setPbls] = useState([]);
+    const [pblsLength, setPblsLength] = useState(0);
+
     const [judgedhackathons, setjudgedHackathons] = useState([]);
     const [judgedhackathonlength, setjudgedHackathonlength] = useState(0);
 
     const [judgedalltime, setjudgedalltime] = useState([]);
     const [judgedalltimelength, setjudgedalltimelength] = useState(0);
 
-
-    
 
     useEffect(() => {
         const fetchProjects = async (username, token) => {
@@ -194,7 +223,29 @@ const PortfolioPage = () => {
                 setHackathonlength(mockHackathons.length);
             }
         };
-         const fetchjudgedhackathons = async (username, token) => {
+
+        const fetchPbls = async (username, token) => {
+            try {
+                const response = await axios.get('http://localhost:4000/api/pbl/my-pbls', {
+                    params: { username },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    withCredentials: true
+                });
+                const pblsReceived = response.data.data.pbls || [];
+                setPbls(pblsReceived);
+                setPblsLength(pblsReceived.length);
+                console.log("PBLs received:", pblsReceived);
+            } catch (error) {
+                console.error('Error fetching PBLs:', error);
+                setPbls([]);
+                setPblsLength(0);
+            }
+        };
+
+        const fetchjudgedhackathons = async (username, token) => {
             try {
 
                 console.log(token)
@@ -210,9 +261,9 @@ const PortfolioPage = () => {
                 const judgedhackathonsReceived = response.data.data.hackathons || [];
                 setjudgedHackathons(judgedhackathonsReceived);
                 setjudgedHackathonlength(judgedhackathonsReceived.length);
-                console.log("Judged  Hackathons received:", judgedhackathonsReceived);
+                console.log("Judged  Hackathons received:", judgedhackathonsReceived);
             } catch (error) {
-                console.error('Error fetching Judged  hackathons:', error);
+                console.error('Error fetching Judged  hackathons:', error);
                 const mockHackathons = [
 
                 ];
@@ -236,9 +287,9 @@ const PortfolioPage = () => {
                 const judgedalltimeReceived = response.data.data.hackathons || [];
                 setjudgedalltime(judgedalltimeReceived);
                 setjudgedalltimelength(judgedalltimeReceived.length);
-                console.log("Judged  Hackathons received:", judgedalltimeReceived);
+                console.log("Judged  Hackathons received:", judgedalltimeReceived);
             } catch (error) {
-                console.error('Error fetching Judged  hackathons:', error);
+                console.error('Error fetching Judged  hackathons:', error);
                 const mockHackathons = [
 
                 ];
@@ -246,7 +297,7 @@ const PortfolioPage = () => {
                 setjudgedalltimelength(mockHackathons.length);
             }
         };
-        const getrole=async ()=>{
+        const getrole = async () => {
 
         }
 
@@ -256,11 +307,12 @@ const PortfolioPage = () => {
         const username = projectUser?.user?.username;
 
         if (username && token) {
-            getrole(username,token)
+            getrole(username, token)
             fetchProjects(username, token);
             fetchHackathons(username, token);
-            fetchjudgedhackathons(username,token)
-            fetchjudgedalltime(username,token)
+            fetchPbls(username, token);
+            fetchjudgedhackathons(username, token)
+            fetchjudgedalltime(username, token)
         }
     }, []);
 
@@ -290,7 +342,7 @@ const PortfolioPage = () => {
                         <div className="text-center md:text-left mt-2 md:mt-0 md:pb-4 xl:pb-6 2xl:pb-8">
                             <h1 className="text-2xl md:text-3xl xl:text-4xl font-bold text-gray-800">
                                 {User?.full_name}
-                                <span className="text-lg md:text-xl xl:text-2xl  text-white font-bold block  sm:inline"> {User?.user?.username}</span>
+                                <span className="text-lg md:text-xl xl:text-2xl  text-white font-bold block  sm:inline"> {User?.user?.username}</span>
                             </h1>
                             <Link to={'/settings'} className="text-sm xl:text-base text-white hover:underline mt-1 block">
                                 Edit your personal info, bio, and location.
@@ -301,20 +353,21 @@ const PortfolioPage = () => {
 
                 <div className="bg-white rounded-b-lg shadow-md pt-4 md:pt-24 xl:pt-28 2xl:pt-32 px-4 sm:px-8 xl:px-12 pb-6">
                     <div className="flex flex-col sm:flex-row items-center gap-3 mt-4 md:mt-0 mb-8 xl:mb-10">
-                        <button onClick={()=>{navigateto('/settings')}} className="w-full sm:w-auto bg-[#4060C1] text-white font-semibold py-2 px-4 xl:py-3 xl:px-5 xl:text-lg rounded-md hover:bg-blue-600 transition-colors duration-200">
+                        <button onClick={() => { navigateto('/settings') }} className="w-full sm:w-auto bg-[#4060C1] text-white font-semibold py-2 px-4 xl:py-3 xl:px-5 xl:text-lg rounded-md hover:bg-blue-600 transition-colors duration-200">
                             Edit info & settings
                         </button>
-                        <button onClick={() => { navigateto('/addproject') }} className="w-full sm:w-auto bg-[#BCCDFF] text-black font-semibold py-2 px-4 xl:py-3 xl:px-5 xl:text-lg rounded-md hover:bg-blue-600  hover:text-white transition-colors duration-200">
+                        <button onClick={() => { navigateto('/addproject') }} className="w-full sm:w-auto bg-[#BCCDFF] text-black font-semibold py-2 px-4 xl:py-3 xl:px-5 xl:text-lg rounded-md hover:bg-blue-600  hover:text-white transition-colors duration-200">
                             Add a new project
                         </button>
                     </div>
 
                     <div className="border-t border-gray-200 pt-4 xl:pt-6">
-                        <div className="grid grid-cols-2 gap-2 text-center md:flex md:justify-start md:text-left md:gap-8 xl:gap-12">
+                        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 text-center">
                             <StatItem value={projectlength} label="PROJECTS" onClick={() => setActiveTab('projects')} isActive={activeTab === 'projects'} />
                             <StatItem value={hackathonlength} label="HACKATHONS" onClick={() => setActiveTab('hackathons')} isActive={activeTab === 'hackathons'} />
-                            <StatItem onClick={()=>{setActiveTab('Judged-Hackathons')}} value={judgedhackathonlength} label="Active Judged" isActive={activeTab === 'Judged-Hackathons'} />
-                             <StatItem onClick={()=>{setActiveTab('Judging-History')}} value={judgedalltimelength} label="Judging History" isActive={activeTab === 'Judging-History'} />
+                            <StatItem value={pblsLength} label="MY PBLS" onClick={() => setActiveTab('pbls')} isActive={activeTab === 'pbls'} />
+                            <StatItem onClick={() => { setActiveTab('Judged-Hackathons') }} value={judgedhackathonlength} label="Active Judged" isActive={activeTab === 'Judged-Hackathons'} />
+                            <StatItem onClick={() => { setActiveTab('Judging-History') }} value={judgedalltimelength} label="Judging History" isActive={activeTab === 'Judging-History'} />
                         </div>
                     </div>
                 </div>
@@ -340,7 +393,17 @@ const PortfolioPage = () => {
                             </div>
                         </>
                     )}
-                     {activeTab === 'Judged-Hackathons' && (
+                    {activeTab === 'pbls' && (
+                        <>
+                            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 px-4 sm:px-0">My PBLs</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {pbls.map((pbl, index) => (
+                                    <PblCard key={index} pbl={pbl} />
+                                ))}
+                            </div>
+                        </>
+                    )}
+                    {activeTab === 'Judged-Hackathons' && (
                         <>
                             <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 px-4 sm:px-0">Judged Hackathons</h2>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

@@ -68,7 +68,7 @@ const TeamCard = ({ team, onAddMarksClick, logger, host, index }) => {
             }
         } catch (error) {
             console.error("Error fetching project:", error);
-            alert("Could not fetch the project details.");
+            alert("Project not yet submitted");
         }
     };
 
